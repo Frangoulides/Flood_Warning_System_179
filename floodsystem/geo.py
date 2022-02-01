@@ -7,6 +7,7 @@ geographical data.
 """
 
 from .utils import sorted_by_key  # noqa
+from haversine import haversine, Unit
 from stationdata import build_station_list
 
 
@@ -18,6 +19,7 @@ def stations_by_distance(stations, p):
 
     # stations = build_station_list       # this is a list of 2165 station objects; stations[-1] prints the last station
     #                                     ; stations[-1].coord prints the coordinates of the last station
+
     for station in stations:
-        coordinates = station.coord
+        distance = haversine(station.coord, p)
 
