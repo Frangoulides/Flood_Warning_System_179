@@ -1,7 +1,7 @@
 from floodsystem import stationdata
 from floodsystem import geo
 from floodsystem import utils
-from floodsystem import station
+
 
 def closest_10(p):
     """

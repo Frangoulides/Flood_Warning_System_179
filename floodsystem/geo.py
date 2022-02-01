@@ -7,7 +7,7 @@ geographical data.
 """
 
 from .utils import sorted_by_key  # noqa
-from haversine import haversine, Unit
+from haversine import haversine
 
 
 def stations_by_distance(stations, p):
@@ -21,8 +21,8 @@ def stations_by_distance(stations, p):
      Documentation for object 'station' can be found by importing 'station' from 'floodsystem'
      and typing 'help(station.MonitoringStation)'
 
-
     """
+
     list_of_tuples = []
 
     for station in stations:
