@@ -48,6 +48,9 @@ def fetch_station_data(use_cache=True):
 
     """
 
+# the data from one station look like that:
+    #{'@id': 'http://environment.data.gov.uk/flood-monitoring/id/stations/055027_TG_328', 'RLOIid': '2225', 'catchmentName': 'Wye', 'dateOpened': '1990-03-08', 'easting': 364065, 'gridReference': 'SO6406525717', 'label': 'Sandford Bridge', 'lat': 51.928793, 'long': -2.524006, 'measures': [{'@id': 'http://environment.data.gov.uk/flood-monitoring/id/measures/055027_TG_328-level-stage-i-15_min-mASD', 'parameter': 'level', 'parameterName': 'Water Level', 'period': 900, 'qualifier': 'Stage', 'unitName': 'mASD'}], 'northing': 225717, 'notation': '055027_TG_328', 'riverName': 'Rudhall Brook', 'stageScale': {'@id': 'http://environment.data.gov.uk/flood-monitoring/id/stations/055027_TG_328/stageScale', 'highestRecent': {'@id': 'http://environment.data.gov.uk/flood-monitoring/id/stations/055027_TG_328/stageScale/highestRecent', 'dateTime': '2012-11-25T05:45:00', 'value': 1.219}, 'maxOnRecord': {'@id': 'http://environment.data.gov.uk/flood-monitoring/id/stations/055027_TG_328/stageScale/maxOnRecord', 'dateTime': '2012-11-25T05:45:00', 'value': 1.229}, 'minOnRecord': {'@id': 'http://environment.data.gov.uk/flood-monitoring/id/stations/055027_TG_328/stageScale/minOnRecord', 'dateTime': '2006-09-13T14:00:00', 'value': 0.026}, 'scaleMax': 2, 'typicalRangeHigh': 0.313, 'typicalRangeLow': 0.075}, 'stationReference': '055027_TG 328', 'status': 'http://environment.data.gov.uk/flood-monitoring/def/core/statusActive', 'town': 'Sandford Bridge', 'wiskiID': '055027'}
+
     # URL for retrieving data for active stations with river level
     # monitoring (see
     # http://environment.data.gov.uk/flood-monitoring/doc/reference)
