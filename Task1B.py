@@ -1,9 +1,17 @@
 from floodsystem import stationdata
 from floodsystem import geo
 from floodsystem import utils
-
+from floodsystem import station
 
 def closest_10(p):
+    """
+    Prints a list of 10 tuples containing the name of station, town and distance from
+    the given coordinate in km, for the 10 closest stations to the given coordinates.
+    The tuples are in ascending order according to their distance to the coordinates given.
+
+    The coordinate shall be given as a tuple p = (latitude, longitude)
+
+    """
     print('\n 10 stations closest to ' + str(p) + '  : \n ' )
 
     stations = stationdata.build_station_list()
@@ -17,6 +25,13 @@ def closest_10(p):
 
 
 def furthest_10(p):
+    """
+      Prints a list of 10 tuples containing the name of station, town and distance from
+      the given coordinate in km, for the 10 furthest stations from the given coordinates.
+      The tuples are in ascending order according to their distance to the coordinates given.
+
+      The coordinate shall be given as a tuple p = (latitude, longitude)
+      """
     print('\n 10 stations furthest from ' + str(p) + '  : \n ')
 
     stations = stationdata.build_station_list()

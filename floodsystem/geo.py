@@ -11,11 +11,18 @@ from haversine import haversine, Unit
 
 
 def stations_by_distance(stations, p):
-    # stations are inputed in the form floodsystem.station.MonitoringStation(station_id, measure_id, label, coord,
-    #                                                                                  typical_range, river, town)
+    """
+     Given a list of station objects and a coordinate p, returns a list of (station, distance) tuples,
+     where distance (float) is the distance of the station from the coordinate p in km.
+     The list is sorted by distance in ascending order.
 
-    # p is in the form (lattitude, longitude)
+     The coordinate shall be given as a tuple p = (latitude, longitude)
 
+     Documentation for object 'station' can be found by importing 'station' from 'floodsystem'
+     and typing 'help(station.MonitoringStation)'
+
+
+    """
     list_of_tuples = []
 
     for station in stations:
