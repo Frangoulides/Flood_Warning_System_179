@@ -20,6 +20,12 @@ def stations_by_distance(stations, p):
     # stations = build_station_list       # this is a list of 2165 station objects; stations[-1] prints the last station
     #                                     ; stations[-1].coord prints the coordinates of the last station
 
+    list_of_tuples = []
+
     for station in stations:
         distance = haversine(station.coord, p)
+        list_of_tuples.append((station, distance))
+
+    return sorted_by_key(list_of_tuples, 1)
+
 
