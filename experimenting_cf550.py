@@ -1,5 +1,3 @@
+from floodsystem import geo
 from floodsystem import stationdata
-
-stations = stationdata.build_station_list()
-
-print(stations[-1].coord)
+print(geo.stations_by_distance(stationdata.build_station_list(), (52.2053, 0.1218)))
