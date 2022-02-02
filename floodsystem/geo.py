@@ -30,3 +30,30 @@ def stations_by_distance(stations, p):
         list_of_tuples.append((station, distance))
 
     return utils.sorted_by_key(list_of_tuples, 1)
+
+
+def stations_within_radius(stations, centre, r):
+    """
+
+    Returns a list of all stations within radius r from the centre.
+
+    stations_within_radius(stations, centre, r)
+
+    'stations' is a list of 'MonitoringStation' objects. Documentation for object 'station' can be found
+    by importing 'station' from 'floodsystem' and typing 'help(station.MonitoringStation)'
+
+    'centre' = (latitude, longitude)         'r' = radius in km
+
+
+    """
+
+    list_of_stations = []
+
+    for station in stations:
+        radius = haversine(station.coord, centre)
+        if radius < r:
+            list_of_stations.append(station)
+        else:
+            pass
+
+    return list_of_stations
