@@ -12,7 +12,6 @@ class MonitoringStation:
 
     def __init__(self, station_id, measure_id, label, coord, typical_range,
                  river, town):
-
         self.station_id = station_id
         self.measure_id = measure_id
 
@@ -38,3 +37,27 @@ class MonitoringStation:
         d += "   river:         {}\n".format(self.river)
         d += "   typical range: {}".format(self.typical_range)
         return d
+
+    def typical_range_consistent(self):
+        """
+        Checks the typical high/low range data for consistency.
+        The method should return True if the data is consistent and False if the data is inconsistent or unavailable.
+        Consistency is defined as when the typical high range is larger than the typical low range
+        """
+        if self.typical_range is None or len(self.typical_range) != 2:
+            return False
+        elif self.typical_range[0] > self.typical_range[1]:
+            return False
+        else:
+            return True
+
+
+def inconsistent_typical_range_stations(stations):
+    """
+    Given a list of station objects, returns a list of stations that have inconsistent data.
+    """
+    inconsistent_stations = []
+    for e in stations:
+        if not MonitoringStation.typical_range_consistent(e):
+            inconsistent_stations.append(e.name)
+    return inconsistent_stations
