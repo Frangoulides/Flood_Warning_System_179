@@ -6,7 +6,7 @@ geographical data.
 
 """
 
-from .utils import sorted_by_key  # noqa
+from floodsystem import utils  # noqa
 from haversine import haversine
 
 
@@ -18,7 +18,7 @@ def stations_by_distance(stations, p):
 
      The coordinate shall be given as a tuple p = (latitude, longitude)
 
-     Documentation for object 'station' can be found by importing 'station' from 'floodsystem'
+     Documentation for object 'MonitoringStation' can be found by importing 'station' from 'floodsystem'
      and typing 'help(station.MonitoringStation)'
 
     """
@@ -29,6 +29,6 @@ def stations_by_distance(stations, p):
         distance = haversine(station.coord, p)
         list_of_tuples.append((station, distance))
 
-    return sorted_by_key(list_of_tuples, 1)
+    return utils.sorted_by_key(list_of_tuples, 1)
 
 
