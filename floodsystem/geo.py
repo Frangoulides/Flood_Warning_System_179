@@ -79,6 +79,8 @@ def stations_by_river(stations):
     Returns a dictionary that maps river names (the ‘key’)
     to a list of station objects on a given river.
 
+    Example output = {'Mevagissey Stream' : [station1, station2, ...], 'Aire Washlands' : [station1, ...]}
+
     'stations' is a list of 'MonitoringStation' objects. Documentation for object 'station' can be found
     by importing 'station' from 'floodsystem' and typing 'help(station.MonitoringStation)'
 
