@@ -1,6 +1,6 @@
 from floodsystem import geo
 from floodsystem import stationdata
-
+from haversine import haversine
 
 def test_stations_by_distance():
     stations_list = geo.stations_by_distance(stationdata.build_station_list(), (52.2053, 0.1218))
@@ -13,3 +13,6 @@ def test_stations_by_distance():
 def test_stations_within_radius():
     stations_list = geo.stations_within_radius(stationdata.build_station_list(), (52.2053, 0.1218), 10)
     assert len(stations_list) == 11
+    for station in stations_list:
+        radius = haversine(station.coord, (52.2053, 0.1218))
+        assert radius < 10
