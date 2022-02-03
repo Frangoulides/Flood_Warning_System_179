@@ -56,3 +56,40 @@ def stations_within_radius(stations, centre, r):
             pass
 
     return list_of_stations
+
+
+def rivers_with_station(stations):
+    """
+    Returns a set of all rivers monitored by 'stations'.
+    'stations' is a list of 'MonitoringStation' objects. Documentation for object 'station' can be found
+    by importing 'station' from 'floodsystem' and typing 'help(station.MonitoringStation)'
+
+    """
+
+    river_list = []
+    for station in stations:
+        river_list.append(station.river)
+
+    return set(river_list)
+
+
+def stations_by_river(stations):
+
+    """
+    Returns a dictionary that maps river names (the ‘key’)
+    to a list of station objects on a given river.
+
+    'stations' is a list of 'MonitoringStation' objects. Documentation for object 'station' can be found
+    by importing 'station' from 'floodsystem' and typing 'help(station.MonitoringStation)'
+
+    """
+
+    dictionary = {}
+    for river in rivers_with_station(stations):
+        river_stations = []
+        for station in stations:
+            if station.river == river:
+                river_stations.append(station)
+        dictionary.update({river: river_stations})
+
+    return dictionary
