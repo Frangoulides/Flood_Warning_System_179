@@ -3,9 +3,9 @@ from floodsystem import stationdata
 
 
 def test_stations_by_distance():
+    stations_list = geo.stations_by_distance(stationdata.build_station_list(), (52.2053, 0.1218))
 
-    station_list = stationdata.build_station_list()
-
-    list = geo.stations_by_distance(station_list, (52.2053, 0.1218))
-
-    assert(len(list) == 2165)
+    assert len(stations_list) == 2165
+    assert stations_list[0][0].name == 'Cambridge Jesus Lock'
+    assert stations_list[-1][0].name == 'Penberth'
+    assert stations_list[0][1] == 0.840237595667494
