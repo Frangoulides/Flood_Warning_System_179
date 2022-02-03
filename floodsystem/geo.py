@@ -46,7 +46,6 @@ def stations_within_radius(stations, centre, r):
 
 
     """
-
     list_of_stations = []
 
     for station in stations:
