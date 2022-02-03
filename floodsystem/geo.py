@@ -61,6 +61,7 @@ def stations_within_radius(stations, centre, r):
 def rivers_with_station(stations):
     """
     Returns a set of all rivers monitored by 'stations'.
+
     'stations' is a list of 'MonitoringStation' objects. Documentation for object 'station' can be found
     by importing 'station' from 'floodsystem' and typing 'help(station.MonitoringStation)'
 
