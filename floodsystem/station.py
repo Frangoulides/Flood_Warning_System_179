@@ -57,7 +57,7 @@ def inconsistent_typical_range_stations(stations):
     Given a list of station objects, returns a list of stations that have inconsistent data.
     """
     inconsistent_stations = []
-    for e in stations:
-        if not MonitoringStation.typical_range_consistent(e):
-            inconsistent_stations.append(e.name)
+    for station in stations:
+        if not MonitoringStation.typical_range_consistent(station):
+            inconsistent_stations.append(station.name)
     return inconsistent_stations
