@@ -58,7 +58,6 @@ def stations_within_radius(stations, centre, r):
     return list_of_stations
 
 
-
 def rivers_with_station(stations):
     """
     Returns a set of all rivers monitored by 'stations'.
