@@ -58,6 +58,7 @@ def stations_within_radius(stations, centre, r):
     return list_of_stations
 
 
+
 def rivers_with_station(stations):
     """
     Returns a set of all rivers monitored by 'stations'.
@@ -96,3 +97,25 @@ def stations_by_river(stations):
         dictionary.update({river: river_stations})
 
     return dictionary
+
+  
+def rivers_by_station_number(stations, N):
+    """
+    Determines the N rivers with the greatest number of monitoring stations.
+    Returns a list of (river name, number of stations) tuples, sorted by the number of stations.
+
+    In the case that there are more rivers with the same number of stations as the N th entry, these
+    entries are included in the list
+    """
+
+    counts = dict()
+    for station in stations:
+        counts[station.river] = counts.get(station.river, 0) + 1
+
+    result = sorted(list(zip(counts.keys(), counts.values())), key=lambda x: x[1], reverse=True)[0:N]
+
+    for t in list(zip(counts.keys(), counts.values())):
+        if t[1] == result[N-1][1] and t not in result:
+            result.append(t)
+
+    return result
