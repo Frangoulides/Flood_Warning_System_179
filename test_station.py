@@ -69,9 +69,9 @@ def test_inconsistent_typical_range_stations():
     stations.append(u)
 
     # inconsistent_typical_range_stations() test
-    assert s.name in inconsistent_typical_range_stations(stations)
-    assert t.name in inconsistent_typical_range_stations(stations)
-    assert u.name not in inconsistent_typical_range_stations(stations)
+    assert s in inconsistent_typical_range_stations(stations)
+    assert t in inconsistent_typical_range_stations(stations)
+    assert u not in inconsistent_typical_range_stations(stations)
 
     # typical_range_consistent() test
     assert MonitoringStation.typical_range_consistent(s) is False
