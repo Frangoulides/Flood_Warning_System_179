@@ -44,5 +44,8 @@ def furthest_10(p):
     print(utils.sorted_by_key(temp, 2))
 
 
-closest_10((52.2053, 0.1218))
-furthest_10((52.2053, 0.1218))
+if __name__ == "__main__":
+    print("*** Task 1B: CUED Part IA Flood Warning System ***")
+    closest_10((52.2053, 0.1218))
+    furthest_10((52.2053, 0.1218))
+

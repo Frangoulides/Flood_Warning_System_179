@@ -9,4 +9,6 @@ names = []
 for i in stations_within_range:
     names.append(i.name)
 
-print(sorted(names))
+if __name__ == "__main__":
+    print("*** Task 1C: CUED Part IA Flood Warning System ***")
+    print(sorted(names))
