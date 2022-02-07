@@ -11,7 +11,10 @@ def run():
     stations = build_station_list()
 
     # Prints all stations with inconsistent data
-    print(sorted(inconsistent_typical_range_stations(stations)))
+    faulty_stations_names = []
+    for station in inconsistent_typical_range_stations(stations):
+        faulty_stations_names.append(station.name)
+    print(sorted(faulty_stations_names))
 
 
 if __name__ == "__main__":
