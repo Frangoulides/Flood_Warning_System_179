@@ -64,7 +64,11 @@ def build_station_list(use_cache=True):
 
 
 def update_water_levels(stations):
-    """Attach level data contained in measure_data to stations"""
+    """Attach level data contained in measure_data to stations
+
+    Updates the latest water level for all stations in the list 'stations' using data fetched from the Internet
+
+    """
 
     # Fetch level data
     measure_data = datafetcher.fetch_latest_water_level_data()
