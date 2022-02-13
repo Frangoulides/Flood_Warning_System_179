@@ -48,6 +48,8 @@ class MonitoringStation:
             return False
         elif self.typical_range[0] > self.typical_range[1]:
             return False
+        elif self.typical_range[0] is None or self.typical_range[1] is None:
+            return False
         else:
             return True
 
@@ -58,7 +60,7 @@ class MonitoringStation:
         a ratio of 0.0 corresponds to a level at the typical low.
 
         """
-        if self.typical_range_consistent():   # i.e. if the typical range is correctly presented
+        if self.typical_range_consistent() is True and self.latest_level is not None:   # i.e. if the typical range is correctly presented
             return (self.latest_level - self.typical_range[0])/(self.typical_range[1] - self.typical_range[0])
         else:
             return None
