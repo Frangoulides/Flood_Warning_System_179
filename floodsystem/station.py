@@ -51,6 +51,18 @@ class MonitoringStation:
         else:
             return True
 
+    def relative_water_level(self):
+        """
+        Returns the latest water level as a fraction of the typical range.
+        i.e. a ratio of 1.0 corresponds to a level at the typical high and
+        a ratio of 0.0 corresponds to a level at the typical low.
+
+        """
+        if self.typical_range_consistent():   # i.e. if the typical range is correctly presented
+            return (self.latest_level - self.typical_range[0])/(self.typical_range[1] - self.typical_range[0])
+        else:
+            return None
+
 
 def inconsistent_typical_range_stations(stations):
     """
