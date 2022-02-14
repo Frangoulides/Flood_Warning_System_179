@@ -19,3 +19,17 @@ def stations_level_over_threshold(stations, tol):
 
     output.sort(key=lambda x: x[1], reverse=True)
     return output
+
+
+def stations_highest_rel_level(stations, n):
+    """
+    Returns a list of the N stations (objects) at which the water level, relative to the typical range, is highest.
+    The list is sorted in descending order by relative level.
+    """
+
+    data = stations_level_over_threshold(stations, 0)
+    output_stations = []
+    for i in range(n):
+        output_stations.append(data[i][0])
+
+    return output_stations
