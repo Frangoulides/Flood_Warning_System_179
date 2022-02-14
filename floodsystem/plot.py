@@ -1,8 +1,3 @@
-
-from floodsystem.datafetcher import fetch_measure_levels
-import datetime
-
-
 def plot_water_levels(station, dates, levels):
     import matplotlib.pyplot as plt
     # dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=2))
