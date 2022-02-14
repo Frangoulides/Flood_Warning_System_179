@@ -12,8 +12,10 @@ def stations_level_over_threshold(stations, tol):
     update_water_levels(stations)
 
     for station in stations:
-        if station.relative_water_level() is None or station.relative_water_level() < tol or station.relative_water_level() > 20:
+        if station.relative_water_level() is None or station.relative_water_level() < tol:
             pass
+        elif station.relative_water_level() > 20:
+            print('Station ' + station.name + ' was excluded because the relative water level value is unrealistic. Value: ' + str(station.relative_water_level()))
         else:
             output.append((station, station.relative_water_level()))
 
