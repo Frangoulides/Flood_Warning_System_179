@@ -16,7 +16,9 @@ def run(n, p):
     for station in stations:
         dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=n))
         plot_water_level_with_fit(station, dates, levels, p)
-        plt.suptitle('Typical Range: %s' % str(station.typical_range))
+        plt.axhline(y=station.typical_range[1], markersize=10, linestyle='dashed', label='typical high', color = 'b')
+        plt.axhline(y=station.typical_range[0], markersize=10, linestyle='dashed', label='typical low', color = 'r')
+        plt.legend()
         plt.show()
 
     return None
