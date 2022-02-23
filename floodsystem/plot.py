@@ -1,5 +1,10 @@
+from floodsystem.analysis import polyfit
+import matplotlib.pyplot as plt
+import matplotlib.dates
+import numpy as np
+
+
 def plot_water_levels(station, dates, levels):
-    import matplotlib.pyplot as plt
 
     plt.plot(dates, levels)
 
@@ -13,3 +18,20 @@ def plot_water_levels(station, dates, levels):
     plt.tight_layout()
 
     plt.show()
+
+
+def plot_water_level_with_fit(station, dates, levels, p):
+    """
+    Plots the water level data and the best-fit polynomial.
+    """
+
+    poly, date_shift = polyfit(dates, levels, p)
+    x = sorted(list(matplotlib.dates.date2num(dates)), reverse=True)
+    y = levels
+
+    plt.plot(x, y)
+
+    x1 = np.linspace(x[0], x[-1], 30)
+    plt.plot(x1, poly(x1 - date_shift))
+
+    return plt.show()
