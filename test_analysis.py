@@ -12,5 +12,5 @@ def test_polyfit():
     poly, date_shift = polyfit(dates, levels, 4)
 
     assert poly is not None
-    assert type(date_shift) == np.float64
+    assert date_shift is not None
 
