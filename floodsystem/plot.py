@@ -2,6 +2,7 @@ from floodsystem.analysis import polyfit
 import matplotlib.pyplot as plt
 import matplotlib.dates
 import numpy as np
+from floodsystem.analysis import running_difference
 
 
 def plot_water_levels(station, dates, levels):
@@ -41,3 +42,20 @@ def plot_water_level_with_fit(station, dates, levels, p):
     plt.tight_layout()
 
     return fig
+
+
+def plot_running_difference(station, dates, levels, p):
+    """
+    Plots the output of running_difference(dates, levels, p) over time.
+    """
+    fig = plt.figure()
+
+    plt.plot(dates, running_difference(dates, levels, p))
+    plt.xticks(rotation=45)
+    plt.title('%s' % station.name)
+    plt.xlabel('date')
+    plt.ylabel('absolute difference(m)')
+    plt.tight_layout()
+
+    return fig
+
