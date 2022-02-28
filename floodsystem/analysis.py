@@ -13,10 +13,10 @@ def polyfit(dates, levels, p):
     x = sorted(list(matplotlib.dates.date2num(dates)), reverse=True)
     y = levels
 
-    date_shift = x[0]
+    date_shift = (x[0], x[-1])
     plt.plot(x, y)
 
-    p_coeff = np.polyfit(x - date_shift, y, p)
+    p_coeff = np.polyfit(x - date_shift[0], y, p)
 
     poly = np.poly1d(p_coeff)
 

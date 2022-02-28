@@ -26,13 +26,12 @@ def plot_water_level_with_fit(station, dates, levels, p):
 
     fig = plt.figure()
     poly, date_shift = polyfit(dates, levels, p)
-    x = sorted(list(matplotlib.dates.date2num(dates)), reverse=True)
     y = levels
 
     plt.plot(dates, y, label='Measured relative water levels')
 
-    x1 = np.linspace(x[0], x[-1], 30)
-    plt.plot(x1, poly(x1 - date_shift), label='Best-fit polynomial of degree %s' % p)
+    x1 = np.linspace(date_shift[0], date_shift[1], 30)
+    plt.plot(x1, poly(x1 - date_shift[0]), label='Best-fit polynomial of degree %s' % p)
 
     plt.xticks(rotation=45)
     plt.title('%s' % station.name)
