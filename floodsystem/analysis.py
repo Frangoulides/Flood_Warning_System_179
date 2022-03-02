@@ -38,7 +38,7 @@ def polyfit_water_level_forecast(station, n, p):
         return None, None
 
     d = np.polyder(poly)
-    if np.polyval(d, (date_shift[1])) > 0:
+    if np.polyval(d, (date_shift[1]-date_shift[0])) > 0:
         forecast = 'Rising'
     else:
         forecast = 'Falling'
