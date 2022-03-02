@@ -29,9 +29,10 @@ def test_rivers_by_station_number():
         label = "some station"
         coord = (-2.0, 4.0)
         trange = (-2.3, 3.4445)
+        catchment = 'catchment'
         river = "HopefullyNotARealRiverName"
         town = "My Town"
-        s = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+        s = MonitoringStation(s_id, m_id, label, coord, trange, catchment, river, town)
         stations.append(s)
 
     assert ("HopefullyNotARealRiverName", 100) in geo.rivers_by_station_number(stations, 5)

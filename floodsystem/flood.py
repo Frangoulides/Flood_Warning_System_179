@@ -46,23 +46,4 @@ def stations_highest_rel_level(stations, n):
     return output_stations
 
 
-def flash_flood_polyfit(stations, tol, p, n):
-    """
-    Given a list of stations, this returns the stations that have positive difference increase above tol.
-    To account for differences varying across stations (and therefore a need for a varying tol), we take the compare the
-    current difference and that stations typical-range. Now we define tol as the max ratio of current difference
-    and typical range.
 
-
-    """
-
-    result = []
-    test = []
-    for station in stations:
-        dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=n))
-        d = running_difference(dates, levels, p)
-        test.append(d[-1] / (station.typical_range[0] - station.typical_range[1]))
-        if d[-1] / (station.typical_range[0] - station.typical_range[1]) > tol:
-            result.append(station)
-
-    return result, test

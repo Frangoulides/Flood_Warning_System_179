@@ -98,6 +98,18 @@ def stations_by_river(stations):
     return dictionary
 
 
+def catchments_with_station(stations):
+    """
+    Returns a set of all catchments monitored by 'stations'.
+    """
+
+    catchment_list = []
+    for station in stations:
+        catchment_list.append(station.catchment)
+
+    return set(catchment_list)
+
+
 def rivers_by_station_number(stations, N):
     """
     Determines the N rivers with the greatest number of monitoring stations.
@@ -116,5 +128,23 @@ def rivers_by_station_number(stations, N):
     for t in list(zip(counts.keys(), counts.values())):
         if t[1] == result[N-1][1] and t not in result:
             result.append(t)
+
+    return result
+
+
+def stations_by_catchment(stations):
+    """
+    Returns a dictionary that maps catchment names (the ‘key’)
+    to a list of station objects on a given catchment.
+
+    Example output = {'Cotswolds' : [station1, station2, ...], 'Ouse' : [station1, ...]}
+    """
+    result = {}
+    for catchment in catchments_with_station(stations):
+        catchment_stations = []
+        for station in stations:
+            if station.catchment == catchment:
+                catchment_stations.append(station)
+        result.update({catchment: catchment_stations})
 
     return result

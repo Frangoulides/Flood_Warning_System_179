@@ -14,15 +14,17 @@ def test_create_monitoring_station():
     label = "some station"
     coord = (-2.0, 4.0)
     trange = (-2.3, 3.4445)
+    catchment = 'some catchment'
     river = "River X"
     town = "My Town"
-    s = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+    s = MonitoringStation(s_id, m_id, label, coord, trange, catchment, river, town)
 
     assert s.station_id == s_id
     assert s.measure_id == m_id
     assert s.name == label
     assert s.coord == coord
     assert s.typical_range == trange
+    assert s.catchment == catchment
     assert s.river == river
     assert s.town == town
 
@@ -40,9 +42,10 @@ def test_inconsistent_typical_range_stations():
     label = "station s"
     coord = (-2.0, 4.0)
     trange = None
+    catchment = 'some catchment'
     river = "River Y"
     town = "My City"
-    s = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+    s = MonitoringStation(s_id, m_id, label, coord, trange, catchment, river, town)
 
     # Create test station with trange = (q,p) where q > p
     s_id = "test-s-id"
@@ -50,9 +53,10 @@ def test_inconsistent_typical_range_stations():
     label = "station t"
     coord = (-2.0, 4.0)
     trange = (4, 1)
+    catchment = 'some catchment'
     river = "River Y"
     town = "My City"
-    t = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+    t = MonitoringStation(s_id, m_id, label, coord, trange, catchment, river, town)
 
     # Create test station with a consistent t_range
     s_id = "test-s-id"
@@ -60,9 +64,10 @@ def test_inconsistent_typical_range_stations():
     label = "station u"
     coord = (-2.0, 4.0)
     trange = (1, 3)
+    catchment = 'some catchment'
     river = "River Y"
     town = "My City"
-    u = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+    u = MonitoringStation(s_id, m_id, label, coord, trange, catchment, river, town)
 
     stations.append(t)
     stations.append(s)
