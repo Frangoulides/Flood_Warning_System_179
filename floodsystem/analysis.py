@@ -4,16 +4,18 @@ import numpy as np
 import datetime
 from floodsystem.datafetcher import fetch_measure_levels
 
+
 def polyfit(dates, levels, p):
     """
     Given the water level time history (dates, levels) for a station,
     Computes a least-squares fit of a polynomial of degree p to water level data.
     Returns a tuple of the polynomial object and any shift of the time (date) axis.
     """
+    if dates == None or len(dates) == 0 or levels == None or len(levels) == 0:
+        return None, None
 
     x = sorted(list(matplotlib.dates.date2num(dates)), reverse=True)
     y = levels
-
     date_shift = (x[0], x[-1])
 
     p_coeff = np.polyfit(x - date_shift[0], y, p)
@@ -31,14 +33,16 @@ def polyfit_water_level_forecast(station, n, p):
     """
     dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=n))
     poly, date_shift = polyfit(dates, levels, p)
+
+    if poly == None or date_shift == None:
+        return None, None
+
     d = np.polyder(poly)
-    d2 = np.polyder(d)
-    forecast = None
-    if np.polyval(d2, (date_shift[1]-date_shift[0])) > 0:
+    if np.polyval(d, (date_shift[1])) > 0:
         forecast = 'Rising'
     else:
         forecast = 'Falling'
 
-    return forecast, np.polyval(d, (date_shift[1]-date_shift[0]))
+    return forecast, np.polyval(d, (date_shift[1] - date_shift[0]))
 
 

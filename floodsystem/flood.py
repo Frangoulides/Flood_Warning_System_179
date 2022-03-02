@@ -91,34 +91,17 @@ def flow_stations_over_threshold(stations, tol):
     return output
 
 
-def spike_from_polyfit(stations, n, p, tol):
+def flood_assessment(station, catchments_over_threshold_list):
     """
-    Given a list of stations, this returns a list of stations that have its latest readings that spike tol above its
-    polyfit line. This polyfit line is calculated over n days and is of degree p.
-    """
-    result = []
-    for station in stations:
-        dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=n))
-        poly, date_shift = polyfit(dates[0:(len(dates)-1)], levels[0:(len(levels)-1)], p)
-
-        latest_polyfit_value = np.polyval(poly, (date_shift[1] - date_shift[0]))
-        if (levels[-1]/latest_polyfit_value) > tol:
-            result.append(station)
-        else:
-            pass
-
-    return result
-
-
-def flood_assessment(station):
-    """
-    Given a station object, returns a tuple of (station, flood risk)
+    Given a station object, returns a strind describing the flood-risk assessment
     Flood risk is rated from a scale of 'No Risk', 'Low', 'Moderate', 'High' and 'Severe'
     """
-    forecast, rate_of_rise = polyfit_water_level_forecast(station, 5, 4)
+    forecast, rate_of_rise = polyfit_water_level_forecast(station, 2, 6)
     rel_level = station.relative_water_level()
-    stations = build_station_list()
     flood_risk_assessment = None
+
+    if rel_level is None:
+        return 'Not Applicable'
 
     # No Risk
     flood_risk_assessment = 'No Risk'
@@ -130,26 +113,37 @@ def flood_assessment(station):
 
     # Moderate
 
-    moderate_risk_catchments = catchments_over_threshold(stations, 0.3, 1)
-
-    if (rel_level >= 1.5 and forecast == 'Rising') or (station.catchment in moderate_risk_catchments):
+    if (rel_level >= 1.5 and forecast == 'Rising') or (station.catchment in catchments_over_threshold_list):
         flood_risk_assessment = 'Moderate'
 
     # High
 
-    high_risk_catchment = catchments_over_threshold(stations, 0.5, 1)
-    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in high_risk_catchment) and
-                                                                               rel_level >= 1):
+    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in catchments_over_threshold_list)
+                                                                               and rel_level >= 1):
         flood_risk_assessment = 'High'
 
     # Severe
-    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in high_risk_catchment) and
-                                                                               rel_level >= 1.5):
-        flood_risk_assessment = 'High'
+    if (rel_level >= 2 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in catchments_over_threshold_list)
+                                                                               and rel_level >= 1.5):
+        flood_risk_assessment = 'Severe'
 
-    return station.name, flood_risk_assessment, station.river, station.town
-
-
+    return flood_risk_assessment
 
 
+def at_risk_towns(stations):
+    """
+    Given a list of stations, Returns a dictionary of towns and their risk level.
+    """
+    catchments = catchments_over_threshold(build_station_list(), 0.5, 1)
+    assessments = {'No Risk': [],
+                   'Low': [],
+                   'Moderate': [],
+                   'High': [],
+                   'Severe': []
+                   }
+    for station in stations:
+        if station.town is not None:
+            assessments[flood_assessment(station, catchments)].append(station.town)
+
+    return assessments
 
