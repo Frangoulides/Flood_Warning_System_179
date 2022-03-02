@@ -141,3 +141,44 @@ def fetch_measure_levels(measure_id, dt):
         levels.append(measure['value'])
 
     return dates, levels
+
+
+def fetch_station_flow_data(use_cache=True):
+    """Fetch data from Environment agency for all active river flow
+    monitoring stations via a REST API and return retrieved data as a
+    JSON object.
+
+    Fetched data is dumped to a cache file so on subsequent call it can
+    optionally be retrieved from the cache file. This is faster than
+    retrieval over the Internet and avoids excessive calls to the
+    Environment Agency service.
+
+    """
+
+    # URL for retrieving data for active stations with river flow monitoring
+    url = "http://environment.data.gov.uk/flood-monitoring/id/stations?status=Active&parameter=flow&qualifier=Stage&_view=full"  # noqa
+
+    sub_dir = 'cache'
+    try:
+        os.makedirs(sub_dir)
+    except FileExistsError:
+        pass
+    cache_file = os.path.join(sub_dir, 'station_data_flow.json')
+
+    # Attempt to load station data from file, otherwise fetch over
+    # Internet
+    if use_cache:
+        try:
+            # Attempt to load from file
+            data = load(cache_file)
+        except FileNotFoundError:
+            # If load from file fails, fetch and dump to file
+            data = fetch(url)
+            dump(data, cache_file)
+    else:
+        # Fetch and dump to file
+        data = fetch(url)
+        dump(data, cache_file)
+
+    return data
+
