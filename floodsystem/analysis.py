@@ -1,7 +1,8 @@
 import matplotlib.dates
 import matplotlib.pyplot as plt
 import numpy as np
-
+import datetime
+from floodsystem.datafetcher import fetch_measure_levels
 
 def polyfit(dates, levels, p):
     """
@@ -22,15 +23,22 @@ def polyfit(dates, levels, p):
     return poly, date_shift
 
 
-def running_difference(dates, levels, p):
+def polyfit_water_level_forecast(station, n, p):
     """
-    Given dates and levels over n days, computes a running difference between the polyfit line of degree p and the
-    actual data.
+    Given the water level time history, this forecasts whether the water level is likely to be rising or falling.
+    Returns a tuple (forecast, rate) where forecast is either rising or falling and rate is the rate at which the
+    water level is predicted to rise. These are extrapolated from a polyfit line of degree p over time n
     """
-
+    dates, levels = fetch_measure_levels(station.measure_id, dt=datetime.timedelta(days=n))
     poly, date_shift = polyfit(dates, levels, p)
-    x1 = np.linspace(date_shift[0], date_shift[1], len(levels))
+    d = np.polyder(poly)
+    d2 = np.polyder(d)
+    forecast = None
+    if np.polyval(d2, (date_shift[1]-date_shift[0])) > 0:
+        forecast = 'Rising'
+    else:
+        forecast = 'Falling'
 
-    result = [a - b for a, b in zip(levels, poly(x1 - date_shift[0]).tolist())]
+    return forecast, np.polyval(d, (date_shift[1]-date_shift[0]))
 
-    return result
+
