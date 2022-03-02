@@ -1,5 +1,6 @@
-from floodsystem.flood import stations_level_over_threshold, stations_highest_rel_level
+from floodsystem.flood import *
 from floodsystem.stationdata import build_station_list
+from floodsystem.station import MonitoringStation
 
 
 def test_stations_level_over_threshold():
@@ -23,3 +24,9 @@ def test_stations_highest_rel_level():
     for i in range(0, len(relative_water_levels)-1):
         assert relative_water_levels[i] > relative_water_levels[i+1]
 
+
+def test_catchments_over_threshold():
+    stations = build_station_list()
+
+    assert len(catchments_over_threshold(stations[0:10], 0.5, 20)) == 0
+    assert len(catchments_over_threshold(stations[0:10], 0, 0)) == 10

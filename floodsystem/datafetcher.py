@@ -182,3 +182,31 @@ def fetch_station_flow_data(use_cache=True):
 
     return data
 
+
+def fetch_latest_flow_data(use_cache=False):
+    """Fetch latest levels from all 'measures'. Returns JSON object"""
+
+    # URL for retrieving data
+    url = "http://environment.data.gov.uk/flood-monitoring/id/measures?parameter=flow&qualifier=Stage&qualifier=flow"  # noqa
+
+    sub_dir = 'cache'
+    try:
+        os.makedirs(sub_dir)
+    except FileExistsError:
+        pass
+    cache_file = os.path.join(sub_dir, 'flow_data.json')
+
+    # Attempt to load level data from file, otherwise fetch over
+    # Internet
+    if use_cache:
+        try:
+            # Attempt to load from file
+            data = load(cache_file)
+        except FileNotFoundError:
+            data = fetch(url)
+            dump(data, cache_file)
+    else:
+        data = fetch(url)
+        dump(data, cache_file)
+
+    return data
