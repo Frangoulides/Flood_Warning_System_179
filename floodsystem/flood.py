@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from floodsystem.stationdata import update_water_levels, update_flow, build_station_list
+from floodsystem.stationdata import update_water_levels, update_flow, build_station_list, build_flow_station_list
 from floodsystem.datafetcher import fetch_measure_levels, fetch_latest_water_level_data
 import datetime
 from floodsystem.analysis import polyfit, polyfit_water_level_forecast
@@ -93,38 +93,63 @@ def flow_stations_over_threshold(stations, tol):
 
 def flood_assessment(station, catchments_over_threshold_list):
     """
-    Given a station object, returns a strind describing the flood-risk assessment
+    Given a station object, returns a string describing the flood-risk assessment
     Flood risk is rated from a scale of 'No Risk', 'Low', 'Moderate', 'High' and 'Severe'
     """
     forecast, rate_of_rise = polyfit_water_level_forecast(station, 2, 6)
     rel_level = station.relative_water_level()
+
+    flow_data = {}
+    for flow_station in build_flow_station_list():
+        flow_data[flow_station.river] = flow_station.latest_flow
     flood_risk_assessment = None
 
     if rel_level is None:
-        return 'Not Applicable'
+        return 'No Assessment'
 
     # No Risk
+
+    # As long as the current relative water level is below 1, we can consider no risk as it is a typical water level
+    # for that river.
     flood_risk_assessment = 'No Risk'
 
     # Low
 
-    if rel_level >= 1:
+    # Once the relative water level breaks through above 1, there is a low risk of flooding. This also includes
+    # cases where the water level slowly creeps past the upper typical range, and thus no sharp rise means low risk
+    # of flooding.
+    if rel_level >= 1 and rate_of_rise <= 0.1:
         flood_risk_assessment = 'Low'
 
     # Moderate
+
+    # The relative water level is half as great as the typical range, indicating an increased likelihood the water level
+    # will reach the height of the river bank.
+    # Also involves the catchment area to look for downstream flooding. If a catchment is recording high levels of water
+    # level it is likely this will cause a domino effect both downstream and upstream:
+    # Downstream Flooding caused by discharge recorded from upstream stations
+    # Up-stream flooding caused by rising tides.
 
     if (rel_level >= 1.5 and forecast == 'Rising') or (station.catchment in catchments_over_threshold_list):
         flood_risk_assessment = 'Moderate'
 
     # High
 
-    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in catchments_over_threshold_list)
-                                                                               and rel_level >= 1):
+    # A high chance of flooding will be indicated by a high rate of water level increase on top of already high levels.
+    # This is especially the case for flash flooding. Also included catchment criteria as well.
+    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or (rel_level >= 1 and rate_of_rise >= 1) \
+            or ((station in catchments_over_threshold_list) and rel_level >= 1):
         flood_risk_assessment = 'High'
 
     # Severe
+
+    # When water levels are twice as high as they usually are and is somehow still rising, the flood likelihood is
+    # severe.
+    # Also, if the river is in a catchment area of high levels and is recording high levels itself, it can indicate
+    # that levels are about to rise more (due to discharge from upstream or rising tides).
+
     if (rel_level >= 2 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in catchments_over_threshold_list)
-                                                                               and rel_level >= 1.5):
+                                                                             and rel_level >= 1.5):
         flood_risk_assessment = 'Severe'
 
     return flood_risk_assessment
@@ -139,11 +164,11 @@ def at_risk_towns(stations):
                    'Low': [],
                    'Moderate': [],
                    'High': [],
-                   'Severe': []
+                   'Severe': [],
+                   'No Assessment': []
                    }
     for station in stations:
         if station.town is not None:
             assessments[flood_assessment(station, catchments)].append(station.town)
 
     return assessments
-

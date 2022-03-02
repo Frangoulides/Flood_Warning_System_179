@@ -23,17 +23,18 @@ def stations_with_rising_levels(s, n, p):
 
 
 def towns_at_risk(stations):
-    print(at_risk_towns(stations))
+    towns = at_risk_towns(stations)
+    for t in towns:
+        if len(towns[t]) == 0:
+            print(t, ": None")
+        else:
+            print(t, ":", towns[t])
 
 
 if __name__ == "__main__":
     print("*** Task 2G: CUED Part IA Flood Warning System ***")
     stations = build_station_list()
     stations2 = stations_highest_rel_level(stations, 10)
-    flow_stations = build_flow_station_list()
-    # catchments_over_threshold_list = catchments_over_threshold(stations, 0.5, 1)
-    catchment_flood(stations, 0.5, 1)
-    stations_with_rising_levels(stations2, 2, 4)
     towns_at_risk(stations2)
 
 
