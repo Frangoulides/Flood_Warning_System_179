@@ -1,4 +1,4 @@
-from floodsystem.analysis import polyfit
+from floodsystem.analysis import polyfit, polyfit_water_level_forecast
 from floodsystem.datafetcher import fetch_measure_levels
 from floodsystem.stationdata import build_station_list
 import matplotlib.dates
@@ -14,3 +14,10 @@ def test_polyfit():
     assert poly is not None
     assert date_shift is not None
 
+
+def test_polyfit_forecast():
+    station = build_station_list()[0]
+    forecast, rate = polyfit_water_level_forecast(station,2,2)
+
+    assert forecast == 'Rising' or 'Falling' or None
+    assert 25 > rate > -25

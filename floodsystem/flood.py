@@ -4,7 +4,7 @@ from floodsystem.datafetcher import fetch_measure_levels, fetch_latest_water_lev
 import datetime
 from floodsystem.analysis import polyfit, polyfit_water_level_forecast
 import numpy as np
-from floodsystem.geo import stations_by_catchment
+from floodsystem.geo import stations_by_catchment, stations_by_river
 
 
 def stations_level_over_threshold(stations, tol):
@@ -67,31 +67,29 @@ def catchments_over_threshold(stations, proportion, tol):
     return output
 
 
-def flow_stations_over_threshold(stations, tol):
+def rivers_over_threshold(stations, proportion, tol):
     """
-    Returns a list of (flow_station, relative water level) tuples in descending relative flow level,
-    for all stations with a relative water level bigger than tol.
-    It also checks if the station.typical_range is a valid entry before proceeding.
+    Returns a list of rivers with a proportion of its stations over a threshhold
 
     """
-    output = []
-    update_flow(stations)
+    a = []
+    update_water_levels(stations)
 
     for station in stations:
-        if station.relative_flow() is None or station.relative_flow() < tol:
+        if station.relative_water_level() is None or station.relative_water_level() < tol:
             pass
-        elif station.relative_flow() > 20:
-            print(
-                'Station ' + station.name + ' was excluded because the relative flow value is unrealistic. Value: ' + str(
-                    station.relative_flow()))
         else:
-            output.append((station, station.relative_flow()))
+            a.append(station.river)
 
-    output.sort(key=lambda x: x[1], reverse=True)
+    output = []
+    for b in a:
+        if a.count(b) >= (proportion * len(stations_by_river(stations)[b])):
+            output.append(b)
+
     return output
 
 
-def flood_assessment(station, catchments_over_threshold_list):
+def flood_assessment(station, catchments_over_threshold_list, rivers_over_threshold_list):
     """
     Given a station object, returns a string describing the flood-risk assessment
     Flood risk is rated from a scale of 'No Risk', 'Low', 'Moderate', 'High' and 'Severe'
@@ -127,18 +125,21 @@ def flood_assessment(station, catchments_over_threshold_list):
     # will reach the height of the river bank.
     # Also involves the catchment area to look for downstream flooding. If a catchment is recording high levels of water
     # level it is likely this will cause a domino effect both downstream and upstream:
+    # This also applies to up and down a river.
     # Downstream Flooding caused by discharge recorded from upstream stations
     # Up-stream flooding caused by rising tides.
 
-    if (rel_level >= 1.5 and forecast == 'Rising') or (station.catchment in catchments_over_threshold_list):
+    if (rel_level >= 1.5 and forecast == 'Rising') or (station.catchment in catchments_over_threshold_list) \
+            or (station.river in rivers_over_threshold_list):
         flood_risk_assessment = 'Moderate'
 
     # High
 
     # A high chance of flooding will be indicated by a high rate of water level increase on top of already high levels.
-    # This is especially the case for flash flooding. Also included catchment criteria as well.
-    if (rel_level >= 1.5 and forecast == 'Rising' and rate_of_rise >= 0.5) or (rel_level >= 1 and rate_of_rise >= 1) \
-            or ((station in catchments_over_threshold_list) and rel_level >= 1):
+    # This is especially the case for flash flooding.
+    if (rel_level >= 2 and forecast == 'Rising' and rate_of_rise >= 1) \
+            or ((station.catchment in catchments_over_threshold_list) and rel_level >= 1) \
+            or ((station.river in rivers_over_threshold_list) and rel_level >= 2):
         flood_risk_assessment = 'High'
 
     # Severe
@@ -148,8 +149,9 @@ def flood_assessment(station, catchments_over_threshold_list):
     # Also, if the river is in a catchment area of high levels and is recording high levels itself, it can indicate
     # that levels are about to rise more (due to discharge from upstream or rising tides).
 
-    if (rel_level >= 2 and forecast == 'Rising' and rate_of_rise >= 0.5) or ((station in catchments_over_threshold_list)
-                                                                             and rel_level >= 1.5):
+    if (rel_level >= 3 and forecast == 'Rising' and rate_of_rise >= 2) \
+            or ((station.catchment in catchments_over_threshold_list) and rel_level >= 3 \
+                and station.river in rivers_over_threshold_list):
         flood_risk_assessment = 'Severe'
 
     return flood_risk_assessment
@@ -160,6 +162,7 @@ def at_risk_towns(stations):
     Given a list of stations, Returns a dictionary of towns and their risk level.
     """
     catchments = catchments_over_threshold(build_station_list(), 0.5, 1)
+    rivers = rivers_over_threshold(build_station_list(), 0.5, 1)
     assessments = {'No Risk': [],
                    'Low': [],
                    'Moderate': [],
@@ -169,6 +172,6 @@ def at_risk_towns(stations):
                    }
     for station in stations:
         if station.town is not None:
-            assessments[flood_assessment(station, catchments)].append(station.town)
+            assessments[flood_assessment(station, catchments, rivers)].append(station.town)
 
     return assessments
