@@ -34,9 +34,10 @@ def test_catchments_over_threshold():
 
 def test_flood_assessment():
     catchments_over_threshold_list = []
+    rivers = []
     station = build_station_list()[0]
 
-    assert flood_assessment(station, catchments_over_threshold_list) is not None
+    assert flood_assessment(station, catchments_over_threshold_list, rivers) is not None
 
 
 def test_at_risk_towns():
